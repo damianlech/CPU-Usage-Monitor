@@ -18,14 +18,9 @@ int main()
 
     while(0 == 0)
     {
-        getDataFromFile();
+        getDataFromFile(getNumberOfCpus(), getnumberOfStatistics());
 
         fflush(stdout);
-
-        for (int i = 0; i < 3; i++)
-            free(cpuCoresAsMatrix[i]);
-
-        free(cpuCoresAsMatrix);
 
         sleep(1);
     }

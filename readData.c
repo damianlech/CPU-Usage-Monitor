@@ -6,16 +6,14 @@
 
 #include <string.h>
 
-int numberOfCpus = 0; //number of lines in /proc/stat that starts with "cpu"
-
-int numberOfStatistics = 0; // number of statistics in lines that start with "cpu"
-
 char singleLine[100];
 
-int **getDataFromFile()
+FILE * filePointer;
+
+//Get information on the number of cpus for program to read
+int getNumberOfCpus()
 {
-    //Create a FILE pointer and read /proc/stat
-    FILE * filePointer;
+    int numberOfCpus;
 
     filePointer = fopen("/proc/stat", "r");
 
@@ -35,8 +33,15 @@ int **getDataFromFile()
     //update the number of cpus with counter
     numberOfCpus = counter;
 
-    //close and open file to reset the !feof
     fclose(filePointer);
+
+    return(numberOfCpus);
+}
+
+//Get information on the number of statistics for program to read
+int getnumberOfStatistics()
+{
+    int numberOfStatistics;
 
     filePointer = fopen("/proc/stat", "r");
 
@@ -53,9 +58,17 @@ int **getDataFromFile()
         }
     }
 
-    //update the number of cpus with the number of spaces
+    //update the number of statistics with the number of spaces
     numberOfStatistics = numberOfSpaces - 1;
 
+    fclose(filePointer);
+
+    return(numberOfStatistics);
+}
+
+//create a dynamically allocated 2D matrix and fill it with statistics using tokens
+int **getDataFromFile(int numberOfCpus, int numberOfStatistics)
+{
     //Create a dynamically allocated 2D matrix
     int **cpuCoresAsMatrix;
 
@@ -65,9 +78,6 @@ int **getDataFromFile()
     {
         cpuCoresAsMatrix[i] = malloc(numberOfStatistics * sizeof(int));
     }
-
-    //close and open file to reset the !feof
-    fclose(filePointer);
 
     filePointer = fopen("/proc/stat", "r");
 
@@ -84,7 +94,7 @@ int **getDataFromFile()
         //create first token, "cpu"
         token = strtok(singleLine, toRemove);
 
-        //create tokens from the rest of the string and write them into an integer matrix cpuCoresAsMatrix
+        //create tokens from the rest of the string and write them into a matrix
         for (int j = 0; j < numberOfStatistics; j++)
         {
             token = strtok(NULL, toRemove);
@@ -98,7 +108,6 @@ int **getDataFromFile()
 
     printf("\n\n\n");
 
-    //close the file for good
     fclose(filePointer);
 
     return cpuCoresAsMatrix;

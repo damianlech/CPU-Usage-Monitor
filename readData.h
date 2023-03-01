@@ -3,13 +3,15 @@
 #define READATA_H
 
 /*
-This function will:
-1. read the file
-2. get the number of lines starting with "cpu" to get the number of cores in the system
-3. using strtok from string.h create tokens based on strings pulled from the file
-4. put the tokens as variables into a dynamic integer matrix
+- getNumberOfCpus will read the file searching for strings starting with "cpu", count them and return the value
+- getNumberOfStatistics will read the first string and based on the number of " " characters, return the number of statistics
+- getDataFromFile will return a matrix (pointer to a pointer) with all statistics based on number of cpus and statistics inside of /proc/stat
 */
 
-int **getDataFromFile();
+int getNumberOfCpus();
+
+int getnumberOfStatistics();
+
+int **getDataFromFile(int numberOfCpus, int numberOfStatistics);
 
 #endif // READATA_H

@@ -10,7 +10,9 @@ Author: Damian Lech
 
 #include <unistd.h>
 
-#include "readData.h"
+#include "getCpuInfo.h"
+
+#include "obtainCpuStatistics.h"
 
 int main()
 {

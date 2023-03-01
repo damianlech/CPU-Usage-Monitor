@@ -4,3 +4,7 @@ CPUUsageMonitor.layout
 bin/
 obj/
 ValgrindOut.xml
+Run
+getCpuInfo.o
+main.o
+obtainCpuStatistics.o

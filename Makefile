@@ -1,11 +1,14 @@
-Run: main.o readData.o
-	gcc main.o readData.o -o Run
+Run: main.o getCpuInfo.o obtainCpuStatistics.o
+	gcc main.o getCpuInfo.o obtainCpuStatistics.o -o Run
 
 main.o: main.c
 	gcc -c -Wall -Wextra main.c
-	
-readData.o: readData.c readData.h
-	gcc -c -Wall -Wextra readData.c
-	
+
+getCpuInfo.o: getCpuInfo.c getCpuInfo.h
+	gcc -c -Wall -Wextra getCpuInfo.c
+
+obtainCpuStatistics.o: obtainCpuStatistics.c obtainCpuStatistics.h
+	gcc -c -Wall -Wextra obtainCpuStatistics.c
+
 clean:
 	rm *.o

@@ -16,13 +16,19 @@ int main()
 {
     int **cpuCoresAsMatrix;
 
-    while(0 == 0)
+    int numberOfCpus = getNumberOfCpus();
+
+    int numberOfStatistics = getnumberOfStatistics();
+
+    cpuCoresAsMatrix = getDataFromFile(numberOfCpus, numberOfStatistics);
+
+    printf("%d", cpuCoresAsMatrix[0][0]);
+
+    for (int i = 0; i < numberOfCpus; i++)
     {
-        getDataFromFile(getNumberOfCpus(), getnumberOfStatistics());
-
-        fflush(stdout);
-
-        sleep(1);
+        free(cpuCoresAsMatrix[i]);
     }
+
+    free(cpuCoresAsMatrix);
 }
 

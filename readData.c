@@ -101,12 +101,9 @@ int **getDataFromFile(int numberOfCpus, int numberOfStatistics)
 
             cpuCoresAsMatrix[i][j] = atoi(token);
 
-            printf("%d ", cpuCoresAsMatrix[i][j]);
+            //printf("%d ", cpuCoresAsMatrix[i][j]);
         }
-        printf("\n");
     }
-
-    printf("\n\n\n");
 
     fclose(filePointer);
 

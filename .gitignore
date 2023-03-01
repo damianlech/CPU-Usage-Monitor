@@ -3,3 +3,4 @@ CPUUsageMonitor.depend
 CPUUsageMonitor.layout
 bin/
 obj/
+ValgrindOut.xml

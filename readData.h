@@ -3,13 +3,13 @@
 #define READATA_H
 
 /*
-The purpose of these two functions is to:
-1. open and read /proc/stat using printLineFromFile to get a first line as a string
-2. convert that string to a usable integer array using convertStringToIntegerArray
+This function will:
+1. read the file
+2. get the number of lines starting with "cpu" to get the number of cores in the system
+3. using strtok from string.h create tokens based on strings pulled from the file
+4. put the tokens as variables into a dynamic integer matrix
 */
 
-void printLineFromFile();
-
-void convertStringToIntegerArray();
+void getDataFromFile();
 
 #endif // READATA_H

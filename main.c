@@ -8,9 +8,17 @@ Author: Damian Lech
 
 #include <stdlib.h>
 
+#include <unistd.h>
+
 #include "readData.h"
 
 int main()
 {
-    convertStringToIntegerArray();
+    while(0 == 0)
+    {
+        getDataFromFile();
+        fflush(stdout);
+        sleep(1);
+    }
 }
+

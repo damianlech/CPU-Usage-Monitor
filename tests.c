@@ -12,14 +12,16 @@
 
 int main()
 {
-    assert(getNumberOfCpus != NULL);
-
+    //getCpuInfo
     printf("Testing getCpuInfo...\n");
+
+    assert(getNumberOfCpus != NULL);
 
     assert(getnumberOfStatistics != NULL);
 
     printf("Success!!!\n\n");
 
+    //obtainCpuStatistics
     printf("Testing obtainCpuStatistics.c...\n");
 
     int **cpuCoresAsMatrix;

@@ -8,3 +8,4 @@ Run
 getCpuInfo.o
 main.o
 obtainCpuStatistics.o
+test

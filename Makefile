@@ -1,14 +1,24 @@
+CC = gcc
+
+CFLAGS = -c -Wall -Wextra
+
 Run: main.o getCpuInfo.o obtainCpuStatistics.o
-	gcc main.o getCpuInfo.o obtainCpuStatistics.o -o Run
+	$(CC) main.o getCpuInfo.o obtainCpuStatistics.o -o Run
+
+testgetCpuInfo.o: getCpuInfo.o
+	$(CC) testgetCpuInfo.c getCpuInfo.o -o test
 
 main.o: main.c
-	gcc -c -Wall -Wextra main.c
+	$(CC) $(CFLAGS) main.c
 
 getCpuInfo.o: getCpuInfo.c getCpuInfo.h
-	gcc -c -Wall -Wextra getCpuInfo.c
+	$(CC) $(CFLAGS) getCpuInfo.c
 
 obtainCpuStatistics.o: obtainCpuStatistics.c obtainCpuStatistics.h
-	gcc -c -Wall -Wextra obtainCpuStatistics.c
+	$(CC) $(CFLAGS) obtainCpuStatistics.c
+
+test: testgetCpuInfo.o
+	./test
 
 clean:
 	rm *.o

@@ -12,7 +12,7 @@ int numberOfStatistics = 0; // number of statistics in lines that start with "cp
 
 char singleLine[100];
 
-void getDataFromFile()
+int **getDataFromFile()
 {
     //Create a FILE pointer and read /proc/stat
     FILE * filePointer;
@@ -56,13 +56,20 @@ void getDataFromFile()
     //update the number of cpus with the number of spaces
     numberOfStatistics = numberOfSpaces - 1;
 
+    //Create a dynamically allocated 2D matrix
+    int **cpuCoresAsMatrix;
+
+    cpuCoresAsMatrix = malloc(numberOfCpus * sizeof(int *));
+
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        cpuCoresAsMatrix[i] = malloc(numberOfStatistics * sizeof(int));
+    }
+
     //close and open file to reset the !feof
     fclose(filePointer);
 
     filePointer = fopen("/proc/stat", "r");
-
-    //create a dynamic matrix to store all statistic about all cpus
-    int cpuCoresAsMatrix[numberOfCpus][numberOfStatistics];
 
     //start writing variables to the matrix
     for (int i = 0; i < numberOfCpus; i++)
@@ -93,4 +100,6 @@ void getDataFromFile()
 
     //close the file for good
     fclose(filePointer);
+
+    return cpuCoresAsMatrix;
 }

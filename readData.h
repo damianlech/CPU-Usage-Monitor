@@ -10,6 +10,6 @@ This function will:
 4. put the tokens as variables into a dynamic integer matrix
 */
 
-void getDataFromFile();
+int **getDataFromFile();
 
 #endif // READATA_H

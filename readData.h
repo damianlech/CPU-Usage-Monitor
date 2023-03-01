@@ -4,4 +4,6 @@
 
 void printLineFromFile();
 
+void convertStringToIntegerArray();
+
 #endif // READATA_H

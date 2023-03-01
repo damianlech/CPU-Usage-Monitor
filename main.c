@@ -12,5 +12,5 @@ Author: Damian Lech
 
 int main()
 {
-    printLineFromFile();
+    convertStringToIntegerArray();
 }

@@ -6,6 +6,8 @@
 
 extern int **cpuCoresAsMatrix;
 
-int **getDataFromFile(int numberOfCpus, int numberOfStatistics);
+int **getDataFromFile();
+
+//void* getDataFromFile();
 
 #endif // OBTAINCPUSTATISTICS_H

@@ -8,17 +8,13 @@
 
 #include "getCpuInfo.h"
 
+//Create a dynamically allocated 2D matrix
+int **cpuCoresAsMatrix;
+
 //create a dynamically allocated 2D matrix and fill it with statistics using tokens
-//void* getDataFromFile()
 int **getDataFromFile()
 {
-    //Create a dynamically allocated 2D matrix
-    int **cpuCoresAsMatrix;
-
-    extern int numberOfCpus;
-
-    extern int numberOfStatistics;
-
+    //allocate memory for the matrix
     cpuCoresAsMatrix = malloc(numberOfCpus * sizeof(int *));
 
     for (int i = 0; i < numberOfCpus; i++)

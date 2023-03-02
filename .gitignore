@@ -10,4 +10,4 @@ main.o
 obtainCpuStatistics.o
 test
 calculations.o
-
+threadFunctions.o

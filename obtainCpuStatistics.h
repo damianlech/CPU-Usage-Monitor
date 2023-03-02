@@ -8,6 +8,4 @@ extern int **cpuCoresAsMatrix;
 
 int **getDataFromFile();
 
-//void* getDataFromFile();
-
 #endif // OBTAINCPUSTATISTICS_H

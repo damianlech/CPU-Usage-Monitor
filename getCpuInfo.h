@@ -8,6 +8,10 @@ extern char singleLine[100];
 
 extern FILE *filePointer;
 
+extern int numberOfCpus;
+
+extern int numberOfStatistics;
+
 int getNumberOfCpus();
 
 int getnumberOfStatistics();

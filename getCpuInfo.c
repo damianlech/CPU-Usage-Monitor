@@ -10,11 +10,13 @@ char singleLine[100];
 
 FILE *filePointer;
 
+int numberOfCpus;
+
+int numberOfStatistics;
+
 //Get information on the number of cpus for program to read
 int getNumberOfCpus()
 {
-    int numberOfCpus;
-
     filePointer = fopen("/proc/stat", "r");
 
     //search how many lines start with "cpu" and increase counter but this much
@@ -41,8 +43,6 @@ int getNumberOfCpus()
 //Get information on the number of statistics for program to read
 int getnumberOfStatistics()
 {
-    int numberOfStatistics;
-
     filePointer = fopen("/proc/stat", "r");
 
     //get the number of ' ' characters in the first line, since the first line always starts with "cpu  " - the number of spaces - 1 will equal the number of statistics

@@ -4,6 +4,8 @@
 
 //Based on the data from getCpuInfo, get statistics about all cores and return them in a 2D matrix (pointer to a pointer array)
 
+extern int **cpuCoresAsMatrix;
+
 int **getDataFromFile(int numberOfCpus, int numberOfStatistics);
 
 #endif // OBTAINCPUSTATISTICS_H

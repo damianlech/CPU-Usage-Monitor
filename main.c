@@ -14,6 +14,8 @@ Author: Damian Lech
 
 #include "obtainCpuStatistics.h"
 
+#include "calculations.h"
+
 int main()
 {
     int **cpuCoresAsMatrix;
@@ -22,9 +24,12 @@ int main()
 
     int numberOfStatistics = getnumberOfStatistics();
 
-    cpuCoresAsMatrix = getDataFromFile(numberOfCpus, numberOfStatistics);
+    //cpuCoresAsMatrix = getDataFromFile(numberOfCpus, numberOfStatistics);
 
-    printf("%d", cpuCoresAsMatrix[0][0]);
+    while ( 0 == 0)
+        calculateCpuUsage(getDataFromFile(numberOfCpus, numberOfStatistics));
+
+    //printf("%d", cpuCoresAsMatrix[0][0]);
 
     for (int i = 0; i < numberOfCpus; i++)
     {

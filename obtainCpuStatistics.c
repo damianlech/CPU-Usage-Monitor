@@ -9,7 +9,7 @@
 #include "getCpuInfo.h"
 
 //create a dynamically allocated 2D matrix and fill it with statistics using tokens
-int **getDataFromFile(int numberOfCpus, int numberOfStatistics)
+int **getDataFromFile(int numberOfCpus,int numberOfStatistics)
 {
     //Create a dynamically allocated 2D matrix
     int **cpuCoresAsMatrix;

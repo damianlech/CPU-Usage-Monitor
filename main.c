@@ -44,7 +44,7 @@ int main()
 
     pthread_cond_init(&matrixCreatedCondition, NULL);
 
-    pthread_cond_init(&matrixCreatedCondition2, NULL);
+    pthread_cond_init(&startedAnalyzerCondition, NULL);
 
 
     //initialize cpu info
@@ -74,7 +74,7 @@ int main()
 
     pthread_mutex_destroy(&mutexBuffer);
 
-    pthread_cond_destroy(&matrixCreatedCondition2);
+    pthread_cond_destroy(&startedAnalyzerCondition);
 
     //free up memory allocated to matrix
     for (int i = 0; i < numberOfCpus; i++)

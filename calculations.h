@@ -2,22 +2,23 @@
 
 #define CALCULATIONS_H
 
-#define user        0
+#define USER        0
 
-#define nice        1
+#define NICE        1
 
-#define system      2
+#define SYSTEM      2
 
-#define idle        3
+#define IDLE        3
 
-#define iowait      4
+#define IOWAIT      4
 
-#define irq         5
+#define IRQ         5
 
-#define softirq     6
+#define SOFTIRQ     6
 
-#define steal       7
+#define STEAL       7
 
+extern int *CPU_Percentage;
 
 void calculateCpuUsage();
 

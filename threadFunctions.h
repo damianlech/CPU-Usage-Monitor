@@ -12,7 +12,7 @@ extern pthread_mutex_t mutexBuffer;
 
 extern pthread_cond_t matrixCreatedCondition;
 
-extern pthread_cond_t matrixCreatedCondition2;
+extern pthread_cond_t startedAnalyzerCondition;
 
 //Functions for threads to use
 void* runReader(); //run reader and update global variable cpuCoresAsMatrix

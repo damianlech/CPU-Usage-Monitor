@@ -12,8 +12,14 @@
 
 #include "getCpuInfo.h"
 
+#include "calculations.h"
+
 //mutex and conditional variable defined
+pthread_cond_t matrixCreatedCondition2;
+
 pthread_mutex_t mutexBuffer;
+
+pthread_mutex_t mutexBuffer2;
 
 pthread_cond_t matrixCreatedCondition;
 
@@ -22,11 +28,39 @@ int signalChecker = 0;
 //Run getDataFromFile every second and update the matrix with information
 void* runReader()
 {
+
+    cpuCoresAsMatrix = malloc(numberOfCpus * sizeof(int *));
+
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        cpuCoresAsMatrix[i] = malloc(numberOfStatistics * sizeof(int));
+    }
+
+    cpuCoresAsMatrixOld = malloc(numberOfCpus * sizeof(int *));
+
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        cpuCoresAsMatrixOld[i] = malloc(numberOfStatistics * sizeof(int));
+    }
+
+
+
     //run until signal detected
     while(signalChecker == 0)
     {
+
+
+
+
+
         pthread_mutex_lock(&mutexBuffer);
 
+        getOldDataFromFile();
+
+
+
+        if (signalChecker == 0)
+            sleep(1);
         //write raw data to the matrix
         getDataFromFile();
 
@@ -34,18 +68,15 @@ void* runReader()
 
         pthread_cond_signal(&matrixCreatedCondition);
 
-        //do it every 1 second unless signal detected
-        if (signalChecker == 0)
-            sleep(1);
+        pthread_cond_wait(&matrixCreatedCondition2, &mutexBuffer2);
 
-        //free up memory allocated to matrix
-        for (int i = 0; i < numberOfCpus; i++)
-        {
-            free(cpuCoresAsMatrix[i]);
 
-        }
 
-        free(cpuCoresAsMatrix);
+
+
+
+
+
     }
 
     //free up Analyzer
@@ -60,15 +91,23 @@ void* runAnalyzer()
     //run until signal detected
     while(signalChecker == 0)
     {
+
         pthread_mutex_lock(&mutexBuffer);
 
         pthread_cond_wait(&matrixCreatedCondition, &mutexBuffer);
 
         //todo
         if (signalChecker == 0)
-            printf("%d\n\n", cpuCoresAsMatrix[0][0]);
+            calculateCpuUsage();
+
+
+
 
         pthread_mutex_unlock(&mutexBuffer);
+
+
+        pthread_cond_signal(&matrixCreatedCondition2);
+
     }
     return 0;
 }

@@ -22,6 +22,9 @@
 
 #define guest_nice  9
 
-int calculateCpuUsage(int **dataFromFile);
+//extern int **prevStatistics;
+
+void calculateCpuUsage();
+
 
 #endif // CALCULATIONS_H

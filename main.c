@@ -32,6 +32,7 @@ void signalCheck()
 
 int main()
 {
+
     //signal checks
     signal(SIGINT, signalCheck);
     //signal(SIGTERM, signalCheck);
@@ -39,7 +40,12 @@ int main()
     //initialize mutex and conditional variables
     pthread_mutex_init(&mutexBuffer, NULL);
 
+    pthread_mutex_init(&mutexBuffer2, NULL);
+
     pthread_cond_init(&matrixCreatedCondition, NULL);
+
+    pthread_cond_init(&matrixCreatedCondition2, NULL);
+
 
     //initialize cpu info
     getNumberOfCpus();
@@ -65,6 +71,21 @@ int main()
     pthread_mutex_destroy(&mutexBuffer);
 
     pthread_cond_destroy(&matrixCreatedCondition);
+
+    //free up memory allocated to matrix
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        free(cpuCoresAsMatrix[i]);
+    }
+
+    free(cpuCoresAsMatrix);
+
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        free(cpuCoresAsMatrixOld[i]);
+    }
+
+    free(cpuCoresAsMatrixOld);
 
     return 0;
 }

@@ -6,6 +6,11 @@
 
 extern int **cpuCoresAsMatrix;
 
-int **getDataFromFile();
+extern int **cpuCoresAsMatrixOld;
+
+void getDataFromFile();
+
+void getOldDataFromFile();
+
 
 #endif // OBTAINCPUSTATISTICS_H

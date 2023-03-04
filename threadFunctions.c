@@ -12,35 +12,30 @@
 
 #include "getCpuInfo.h"
 
-pthread_mutex_t mutexBuffer = PTHREAD_MUTEX_INITIALIZER;
+//mutex and conditional variable defined
+pthread_mutex_t mutexBuffer;
 
-pthread_cond_t matrixCreatedCondition = PTHREAD_COND_INITIALIZER;
+pthread_cond_t matrixCreatedCondition;
 
-int matrixCreated = 0;
+int signalChecker = 0;
 
-
-
-int i = 0;
 //Run getDataFromFile every second and update the matrix with information
 void* runReader()
 {
-    while(i == 0)
-    //for (int j=0;j<10;j++)
+    //run until signal detected
+    while(signalChecker == 0)
     {
-        //while(matrixCreated == 1)
-            //pthread_cond_wait(&matrixCreatedCondition, &mutexBuffer);
-
-
         pthread_mutex_lock(&mutexBuffer);
+
         //write raw data to the matrix
         getDataFromFile();
 
-
         pthread_mutex_unlock(&mutexBuffer);
+
         pthread_cond_signal(&matrixCreatedCondition);
-        //matrixCreated=1;
-        //do it every 1 second
-        if (i == 0)
+
+        //do it every 1 second unless signal detected
+        if (signalChecker == 0)
             sleep(1);
 
         //free up memory allocated to matrix
@@ -51,12 +46,10 @@ void* runReader()
         }
 
         free(cpuCoresAsMatrix);
-        //matrixCreated = 1;
     }
-    //printf("%d", i);
+
+    //free up Analyzer
     pthread_cond_signal(&matrixCreatedCondition);
-
-
 
     return 0;
 }
@@ -64,27 +57,18 @@ void* runReader()
 //todo
 void* runAnalyzer()
 {
-    while(i == 0)
-    //for (int j=0;j<10;j++)
+    //run until signal detected
+    while(signalChecker == 0)
     {
         pthread_mutex_lock(&mutexBuffer);
 
-
-
         pthread_cond_wait(&matrixCreatedCondition, &mutexBuffer);
 
-
-        //matrixCreated=0;
-
-        if (i == 0)
+        //todo
+        if (signalChecker == 0)
             printf("%d\n\n", cpuCoresAsMatrix[0][0]);
 
         pthread_mutex_unlock(&mutexBuffer);
-        //matrixCreated = 0;
-        //pthread_cond_wait(&matrixCreatedCondition, &mutexBuffer);
-        //printf("%d", i);
     }
-    //printf("%d", i);
-
     return 0;
 }

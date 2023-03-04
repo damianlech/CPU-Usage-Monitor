@@ -2,17 +2,15 @@
 
 #define THREADFUNCTIONS_H
 
-//Functions for threads to use
+//until specified signal is sent, threads will keep running
+extern int signalChecker;
 
-extern int i;
-
-
-
-//extern int matrixCreated;
-
+//mutex and conditional variable
 extern pthread_mutex_t mutexBuffer;
+
 extern pthread_cond_t matrixCreatedCondition;
 
+//Functions for threads to use
 void* runReader(); //run reader and update global variable cpuCoresAsMatrix
 
 void* runAnalyzer(); //read cpuCoresAsMatrix and convert it into cpu usage

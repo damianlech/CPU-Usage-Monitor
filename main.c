@@ -26,7 +26,7 @@ Author: Damian Lech
 
 void signalCheck()
 {
-    i++;
+    signalChecker = 1;
     printf("\nExiting program...\n");
 }
 
@@ -36,11 +36,10 @@ int main()
     signal(SIGINT, signalCheck);
     //signal(SIGTERM, signalCheck);
 
+    //initialize mutex and conditional variables
     pthread_mutex_init(&mutexBuffer, NULL);
 
     pthread_cond_init(&matrixCreatedCondition, NULL);
-
-
 
     //initialize cpu info
     getNumberOfCpus();
@@ -52,44 +51,20 @@ int main()
 
     pthread_t Analyzer;
 
-    //create mutex
-    //pthread_mutex_init(&mutexBuffer, NULL);
-
     //start threads TODO
     pthread_create(&Reader, NULL, (void*)&runReader, NULL);
 
-    //sleep(2);
-
     pthread_create(&Analyzer, NULL, (void*)&runAnalyzer, NULL);
 
-
-    while (i == 0)
-    {
-
-    }
-
-
-    //sleep(1);
-
-    //pthread_mutex_unlock(&mutexBuffer);
-
     //join threads to free up memory
-    //pthread_exit(NULL);
-
-
-
     pthread_join(Reader, NULL);
 
     pthread_join(Analyzer, NULL);
 
-    //pthread_exit(NULL);
-
+    //destroy mutex and conditional variables
     pthread_mutex_destroy(&mutexBuffer);
 
     pthread_cond_destroy(&matrixCreatedCondition);
-
-
-
 
     return 0;
 }

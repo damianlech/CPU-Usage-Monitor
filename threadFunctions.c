@@ -15,20 +15,20 @@
 #include "calculations.h"
 
 //mutex and conditional variable defined
-pthread_cond_t matrixCreatedCondition2;
+pthread_mutex_t mutexCheckReadData;
 
 pthread_mutex_t mutexBuffer;
 
-pthread_mutex_t mutexBuffer2;
-
 pthread_cond_t matrixCreatedCondition;
+
+pthread_cond_t startedAnalyzerCondition;
 
 int signalChecker = 0;
 
 //Run getDataFromFile every second and update the matrix with information
 void* runReader()
 {
-
+    //alloc matrixes
     cpuCoresAsMatrix = malloc(numberOfCpus * sizeof(int *));
 
     for (int i = 0; i < numberOfCpus; i++)
@@ -48,34 +48,22 @@ void* runReader()
     //run until signal detected
     while(signalChecker == 0)
     {
+        pthread_mutex_lock(&mutexCheckReadData);
 
-
-
-
-
-        pthread_mutex_lock(&mutexBuffer);
-
+        //write old data to the matrix
         getOldDataFromFile();
-
-
 
         if (signalChecker == 0)
             sleep(1);
-        //write raw data to the matrix
+        //write current data to the matrix
         getDataFromFile();
 
-        pthread_mutex_unlock(&mutexBuffer);
+        pthread_mutex_unlock(&mutexCheckReadData);
 
         pthread_cond_signal(&matrixCreatedCondition);
 
-        pthread_cond_wait(&matrixCreatedCondition2, &mutexBuffer2);
-
-
-
-
-
-
-
+        //wait for Analyzer
+        pthread_cond_wait(&startedAnalyzerCondition, &mutexBuffer);
 
     }
 
@@ -91,22 +79,18 @@ void* runAnalyzer()
     //run until signal detected
     while(signalChecker == 0)
     {
+        pthread_mutex_lock(&mutexCheckReadData);
 
-        pthread_mutex_lock(&mutexBuffer);
-
-        pthread_cond_wait(&matrixCreatedCondition, &mutexBuffer);
+        pthread_cond_wait(&matrixCreatedCondition, &mutexCheckReadData);
 
         //todo
         if (signalChecker == 0)
             calculateCpuUsage();
 
+        pthread_mutex_unlock(&mutexCheckReadData);
 
-
-
-        pthread_mutex_unlock(&mutexBuffer);
-
-
-        pthread_cond_signal(&matrixCreatedCondition2);
+        //free Reader
+        pthread_cond_signal(&startedAnalyzerCondition);
 
     }
     return 0;

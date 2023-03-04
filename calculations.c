@@ -12,44 +12,22 @@
 
 #include "calculations.h"
 
-
-
-
-
-
-
 void calculateCpuUsage()
 {
+    int
 
+    PrevIdle = previdle + previowait
+    Idle = idle + iowait
 
-    //for (int i = 0; i < numberOfCpus; i++)
+    PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq + prevsteal
+    NonIdle = user + nice + system + irq + softirq + steal
 
+    PrevTotal = PrevIdle + PrevNonIdle
+    Total = Idle + NonIdle
 
+    # differentiate: actual value minus the previous one
+    totald = Total - PrevTotal
+    idled = Idle - PrevIdle
 
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 10; j++)
-        {
-            printf("%d ", cpuCoresAsMatrix[i][j]);
-        }
-        printf("\n");
-    }
-
-    printf("\n\n\n");
-
-    for (int i = 0; i < 3; i++)
-    {
-
-        for (int j = 0; j < 10; j++)
-        {
-
-            printf("%d ", cpuCoresAsMatrixOld[i][j]);
-        }
-        printf("\n");
-    }
-
-
-    printf("\n\n\n");
-
-
+    CPU_Percentage = (totald - idled)/totald
 }

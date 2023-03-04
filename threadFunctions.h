@@ -5,10 +5,10 @@
 //until specified signal is sent, threads will keep running
 extern int signalChecker;
 
-//mutex and conditional variable
-extern pthread_mutex_t mutexBuffer;
+//mutexes and conditional variable
+extern pthread_mutex_t mutexCheckReadData;
 
-extern pthread_mutex_t mutexBuffer2;
+extern pthread_mutex_t mutexBuffer;
 
 extern pthread_cond_t matrixCreatedCondition;
 

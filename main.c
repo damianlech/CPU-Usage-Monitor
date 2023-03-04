@@ -38,9 +38,9 @@ int main()
     //signal(SIGTERM, signalCheck);
 
     //initialize mutex and conditional variables
-    pthread_mutex_init(&mutexBuffer, NULL);
+    pthread_mutex_init(&mutexCheckReadData, NULL);
 
-    pthread_mutex_init(&mutexBuffer2, NULL);
+    pthread_mutex_init(&mutexBuffer, NULL);
 
     pthread_cond_init(&matrixCreatedCondition, NULL);
 
@@ -68,9 +68,13 @@ int main()
     pthread_join(Analyzer, NULL);
 
     //destroy mutex and conditional variables
-    pthread_mutex_destroy(&mutexBuffer);
+    pthread_mutex_destroy(&mutexCheckReadData);
 
     pthread_cond_destroy(&matrixCreatedCondition);
+
+    pthread_mutex_destroy(&mutexBuffer);
+
+    pthread_cond_destroy(&matrixCreatedCondition2);
 
     //free up memory allocated to matrix
     for (int i = 0; i < numberOfCpus; i++)

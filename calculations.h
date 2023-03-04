@@ -18,11 +18,6 @@
 
 #define steal       7
 
-#define guest       8
-
-#define guest_nice  9
-
-//extern int **prevStatistics;
 
 void calculateCpuUsage();
 

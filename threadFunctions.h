@@ -6,9 +6,12 @@
 
 extern int i;
 
+
+
 //extern int matrixCreated;
 
 extern pthread_mutex_t mutexBuffer;
+extern pthread_cond_t matrixCreatedCondition;
 
 void* runReader(); //run reader and update global variable cpuCoresAsMatrix
 

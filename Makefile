@@ -2,8 +2,10 @@ CC = gcc
 
 CFLAGS = -c -Wall -Wextra
 
-Run: main.o getCpuInfo.o obtainCpuStatistics.o calculations.o threadFunctions.o
-	$(CC) main.o getCpuInfo.o obtainCpuStatistics.o calculations.o threadFunctions.o -o Run
+BINARIES = main.o getCpuInfo.o obtainCpuStatistics.o calculations.o threadFunctions.o
+
+Run: $(BINARIES)
+	$(CC) $(BINARIES) -o Run
 
 tests.o: getCpuInfo.o obtainCpuStatistics.o
 	$(CC) tests.c getCpuInfo.o obtainCpuStatistics.o -o test

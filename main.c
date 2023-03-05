@@ -24,9 +24,7 @@ Author: Damian Lech
 
 #include "threadFunctions.h"
 
-#include "varCreate.h"
-
-#include "varDestroy.h"
+#include "varInitDestroy.h"
 
 int main()
 {
@@ -35,7 +33,7 @@ int main()
     //signal(SIGTERM, signalCheck);
 
     //initialize mutex and semaphores
-    varCreate();
+    varInit();
 
     //initialize cpu info
     getNumberOfCpus();

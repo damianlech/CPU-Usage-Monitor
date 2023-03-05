@@ -8,6 +8,10 @@ extern int signalChecker;
 //mutexes and semaphores
 extern pthread_mutex_t mutexCheckReadData;
 
+extern pthread_mutex_t mutexWatchdog;
+
+extern pthread_cond_t condWatchdog;
+
 extern sem_t semReaderEmpty;
 
 extern sem_t semReaderFull;
@@ -22,5 +26,7 @@ void* runReader(); //run reader and update global variable cpuCoresAsMatrix
 void* runAnalyzer(); //read cpuCoresAsMatrix and convert it into cpu usage
 
 void* runPrinter(); //Print out CPU usage every second
+
+void* runWatchdog();
 
 #endif // THREADFUNCTIONS_H

@@ -10,6 +10,8 @@
 
 #include <semaphore.h>
 
+#include <time.h>
+
 #include "obtainCpuStatistics.h"
 
 #include "getCpuInfo.h"
@@ -18,6 +20,10 @@
 
 //mutex and semaphores defined
 pthread_mutex_t mutexCheckReadData;
+
+pthread_mutex_t mutexWatchdog;
+
+pthread_cond_t condWatchdog;
 
 sem_t semReaderEmpty;
 
@@ -67,6 +73,8 @@ void* runReader()
 
         //post semaphore
         sem_post(&semReaderFull);
+
+        pthread_cond_signal(&condWatchdog);
     }
 
     //free allocated matrixes
@@ -83,6 +91,8 @@ void* runReader()
     }
 
     free(cpuCoresAsMatrixOld);
+
+
 
     return 0;
 }
@@ -111,9 +121,13 @@ void* runAnalyzer()
         sem_post(&semReaderEmpty);
 
         sem_post(&semAnalyzerFull);
+
+        pthread_cond_signal(&condWatchdog);
     }
     //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);
+
+
 
     return 0;
 }
@@ -142,6 +156,36 @@ void* runPrinter()
             printf("\n");
         }
         sem_post(&semAnalyzerEmpty);
+
+        pthread_cond_signal(&condWatchdog);
+    }
+    return 0;
+}
+
+//sss
+void* runWatchdog()
+{
+
+    //run until signal detected
+    while(signalChecker == 0)
+    {
+        time_t begin = time(NULL);
+
+        if(signalChecker == 0)
+            pthread_cond_wait(&condWatchdog, &mutexWatchdog);
+
+        time_t end = time(NULL);
+
+        if (end - begin >= 2)
+        {
+            printf("Time waiting for a thread exceeded 2 seconds... Exiting program\n");
+            signalChecker = 1;
+        }
+        else
+        {
+            printf("The elapsed time is %ld seconds\n\n", (end - begin));
+        }
+
     }
     return 0;
 }

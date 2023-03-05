@@ -42,6 +42,10 @@ int main()
     //initialize mutex and semaphores
     pthread_mutex_init(&mutexCheckReadData, NULL);
 
+    pthread_mutex_init(&mutexWatchdog, NULL);
+
+    pthread_cond_init(&condWatchdog, &mutexWatchdog);
+
     sem_init(&semReaderEmpty, 0, 1);
 
     sem_init(&semReaderFull, 0, 0);
@@ -62,12 +66,16 @@ int main()
 
     pthread_t Printer;
 
+    pthread_t Watchdog;
+
     //start threads TODO
     pthread_create(&Reader, NULL, (void*)&runReader, NULL);
 
     pthread_create(&Analyzer, NULL, (void*)&runAnalyzer, NULL);
 
     pthread_create(&Printer, NULL, (void*)&runPrinter, NULL);
+
+    pthread_create(&Watchdog, NULL, (void*)&runWatchdog, NULL);
 
     //join threads to free up memory
     pthread_join(Reader, NULL);
@@ -76,8 +84,14 @@ int main()
 
     pthread_join(Printer, NULL);
 
+    pthread_join(Watchdog, NULL);
+
     //destroy mutex and semaphores
     pthread_mutex_destroy(&mutexCheckReadData);
+
+    pthread_mutex_destroy(&mutexWatchdog);
+
+    pthread_cond_destroy(&condWatchdog);
 
     sem_destroy(&semReaderEmpty);
 

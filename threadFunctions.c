@@ -18,12 +18,18 @@
 
 #include "calculations.h"
 
+#include "threadFunctions.h"
+
 //mutexes and semaphores defined
 pthread_mutex_t mutexCheckReadData;
 
 pthread_mutex_t mutexWatchdog;
 
-pthread_cond_t condWatchdog;
+pthread_cond_t condReader;
+
+pthread_cond_t condAnalyzer;
+
+pthread_cond_t condPrinter;
 
 sem_t semReaderEmpty;
 
@@ -81,7 +87,8 @@ void* runReader()
         //post semaphore
         sem_post(&semReaderFull);
 
-        pthread_cond_signal(&condWatchdog);
+        pthread_cond_signal(&condReader);
+
     }
 
     //free allocated matrixes
@@ -126,7 +133,7 @@ void* runAnalyzer()
 
         sem_post(&semAnalyzerFull);
 
-        pthread_cond_signal(&condWatchdog);
+        pthread_cond_signal(&condAnalyzer);
     }
     //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);
@@ -159,7 +166,7 @@ void* runPrinter()
         }
         sem_post(&semAnalyzerEmpty);
 
-        pthread_cond_signal(&condWatchdog);
+        pthread_cond_signal(&condPrinter);
     }
     return 0;
 }
@@ -172,25 +179,69 @@ void* runWatchdog()
     while(signalChecker == 0)
     {
         //read starting time
-        time_t begin = time(NULL);
+        time_t ReaderBegin = time(NULL);
 
         //check for signal from threads
         if(signalChecker == 0)
-            pthread_cond_wait(&condWatchdog, &mutexWatchdog);
+            pthread_cond_wait(&condReader, &mutexWatchdog);
 
         //read end time
-        time_t end = time(NULL);
+        time_t ReaderEnd = time(NULL);
 
         //save time or close the program depending on the difference in time
-        if (end - begin >= 2)
+        if (ReaderEnd - ReaderBegin >= 2)
         {
-            printf("Time waiting for a thread exceeded 2 seconds... Exiting program\n");
+            printf("Time waiting for a thread Reader exceeded 2 seconds... Exiting program\n");
             signalChecker = 1;
         }
         else
         {
             if (signalChecker == 0)
-                printf("The elapsed time is %ld seconds\n\n", (end - begin));
+                printf("The elapsed time for Reader is %ld seconds\n\n", (ReaderEnd - ReaderBegin));
+        }
+
+        //read starting time
+        time_t AnalyzerBegin = time(NULL);
+
+        //check for signal from threads
+        if(signalChecker == 0)
+            pthread_cond_wait(&condAnalyzer, &mutexWatchdog);
+
+        //read end time
+        time_t AnalyzerEnd = time(NULL);
+
+        //save time or close the program depending on the difference in time
+        if (AnalyzerEnd - AnalyzerBegin >= 2)
+        {
+            printf("Time waiting for a thread Analyzer exceeded 2 seconds... Exiting program\n");
+            signalChecker = 1;
+        }
+        else
+        {
+            if (signalChecker == 0)
+                printf("The elapsed time for Analyzer is %ld seconds\n\n", (AnalyzerEnd - AnalyzerBegin));
+        }
+
+        //read starting time
+        time_t PrinterBegin = time(NULL);
+
+        //check for signal from threads
+        if(signalChecker == 0)
+            pthread_cond_wait(&condPrinter, &mutexWatchdog);
+
+        //read end time
+        time_t PrinterEnd = time(NULL);
+
+        //save time or close the program depending on the difference in time
+        if (PrinterEnd - PrinterBegin >= 2)
+        {
+            printf("Time waiting for a thread Printer exceeded 2 seconds... Exiting program\n");
+            signalChecker = 1;
+        }
+        else
+        {
+            if (signalChecker == 0)
+                printf("The elapsed time for Printer is %ld seconds\n\n", (PrinterEnd - PrinterBegin));
         }
     }
     return 0;

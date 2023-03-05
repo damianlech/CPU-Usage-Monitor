@@ -11,3 +11,5 @@ obtainCpuStatistics.o
 test
 calculations.o
 threadFunctions.o
+varCreate.o
+varDestroy.o

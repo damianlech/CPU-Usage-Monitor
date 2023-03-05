@@ -2,7 +2,7 @@ CC = gcc
 
 CFLAGS = -c -Wall -Wextra
 
-BINARIES = main.o getCpuInfo.o obtainCpuStatistics.o calculations.o threadFunctions.o
+BINARIES = main.o getCpuInfo.o obtainCpuStatistics.o calculations.o threadFunctions.o varCreate.o varDestroy.o
 
 Run: $(BINARIES)
 	$(CC) $(BINARIES) -o Run
@@ -24,6 +24,12 @@ calculations.o: calculations.c calculations.h
 
 threadFunctions.o: threadFunctions.c threadFunctions.h
 	$(CC) $(CFLAGS) threadFunctions.c
+
+varCreate.o: varCreate.c varCreate.h
+	$(CC) $(CFLAGS) varCreate.c
+
+varDestroy.o: varDestroy.c varDestroy.h
+	$(CC) $(CFLAGS) varDestroy.c
 
 test: tests.o
 	./test

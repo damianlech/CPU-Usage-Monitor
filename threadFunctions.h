@@ -10,7 +10,13 @@ extern pthread_mutex_t mutexCheckReadData;
 
 extern pthread_mutex_t mutexWatchdog;
 
-extern pthread_cond_t condWatchdog;
+extern pthread_mutex_t mutexQueue;
+
+extern pthread_cond_t condReader;
+
+extern pthread_cond_t condAnalyzer;
+
+extern pthread_cond_t condPrinter;
 
 extern sem_t semReaderEmpty;
 
@@ -28,5 +34,7 @@ void* runAnalyzer(); //read cpuCoresAsMatrix and convert it into cpu usage
 void* runPrinter(); //Print out CPU usage every second
 
 void* runWatchdog(); //Await for signal from threads and read the time in between
+
+void signalCheck();
 
 #endif // THREADFUNCTIONS_H

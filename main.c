@@ -24,6 +24,10 @@ Author: Damian Lech
 
 #include "threadFunctions.h"
 
+#include "varCreate.h"
+
+#include "varDestroy.h"
+
 int main()
 {
     //signal checks
@@ -31,19 +35,7 @@ int main()
     //signal(SIGTERM, signalCheck);
 
     //initialize mutex and semaphores
-    pthread_mutex_init(&mutexCheckReadData, NULL);
-
-    pthread_mutex_init(&mutexWatchdog, NULL);
-
-    pthread_cond_init(&condWatchdog, &mutexWatchdog);
-
-    sem_init(&semReaderEmpty, 0, 1);
-
-    sem_init(&semReaderFull, 0, 0);
-
-    sem_init(&semAnalyzerEmpty, 0, 1);
-
-    sem_init(&semAnalyzerFull, 0, 0);
+    varCreate();
 
     //initialize cpu info
     getNumberOfCpus();
@@ -78,19 +70,7 @@ int main()
     pthread_join(Watchdog, NULL);
 
     //destroy mutex and semaphores
-    pthread_mutex_destroy(&mutexCheckReadData);
-
-    pthread_mutex_destroy(&mutexWatchdog);
-
-    pthread_cond_destroy(&condWatchdog);
-
-    sem_destroy(&semReaderEmpty);
-
-    sem_destroy(&semReaderFull);
-
-    sem_destroy(&semAnalyzerEmpty);
-
-    sem_destroy(&semAnalyzerFull);
+    varDestroy();
 
     return 0;
 }

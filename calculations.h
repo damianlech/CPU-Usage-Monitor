@@ -20,6 +20,6 @@
 
 extern float *CPU_Percentage;
 
-float *calculateCpuUsage();
+float *calculateCpuUsage(void);
 
 #endif // CALCULATIONS_H

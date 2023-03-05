@@ -52,18 +52,18 @@ void signalCheck()
 void* runReader()
 {
     //alloc matrixes
-    cpuCoresAsMatrix = malloc(numberOfCpus * sizeof(int *));
+    cpuCoresAsMatrix = malloc((unsigned long)numberOfCpus * sizeof(int *));
 
     for (int i = 0; i < numberOfCpus; i++)
     {
-        cpuCoresAsMatrix[i] = malloc(numberOfStatistics * sizeof(int));
+        cpuCoresAsMatrix[i] = malloc((unsigned long)numberOfStatistics * sizeof(int));
     }
 
-    cpuCoresAsMatrixOld = malloc(numberOfCpus * sizeof(int *));
+    cpuCoresAsMatrixOld = malloc((unsigned long)numberOfCpus * sizeof(int *));
 
     for (int i = 0; i < numberOfCpus; i++)
     {
-        cpuCoresAsMatrixOld[i] = malloc(numberOfStatistics * sizeof(int));
+        cpuCoresAsMatrixOld[i] = malloc((unsigned long)numberOfStatistics * sizeof(int));
     }
 
     //run until signal detected
@@ -112,7 +112,7 @@ void* runReader()
 void* runAnalyzer()
 {
     //allocate memory for CPU_percentage
-    CPU_Percentage = malloc(numberOfCpus * sizeof(int));
+    CPU_Percentage = malloc((unsigned long)numberOfCpus * sizeof(int));
 
     //run until signal detected
     while(signalChecker == 0)
@@ -155,11 +155,11 @@ void* runPrinter()
             {
                 if (i == 0)
                 {
-                    printf("Total CPU usage: %.02f%%\n", CPU_Percentage[i]);
+                    printf("Total CPU usage: %.02f%%\n", (double)CPU_Percentage[i]);
                 }
                 else
                 {
-                    printf("CPU %d usage:     %.02f%%\n", i, CPU_Percentage[i]);
+                    printf("CPU %d usage:     %.02f%%\n", i, (double)CPU_Percentage[i]);
                 }
             }
             printf("\n");

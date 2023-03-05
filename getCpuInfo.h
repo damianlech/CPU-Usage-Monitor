@@ -12,8 +12,8 @@ extern int numberOfCpus;
 
 extern int numberOfStatistics;
 
-int getNumberOfCpus();
+int getNumberOfCpus(void);
 
-int getnumberOfStatistics();
+int getnumberOfStatistics(void);
 
 #endif // GETCPUINFO_H

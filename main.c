@@ -50,13 +50,13 @@ int main()
     pthread_t Watchdog;
 
     //start threads TODO
-    pthread_create(&Reader, NULL, (void*)&runReader, NULL);
+    pthread_create(&Reader, NULL, runReader, NULL);
 
-    pthread_create(&Analyzer, NULL, (void*)&runAnalyzer, NULL);
+    pthread_create(&Analyzer, NULL, runAnalyzer, NULL);
 
-    pthread_create(&Printer, NULL, (void*)&runPrinter, NULL);
+    pthread_create(&Printer, NULL, runPrinter, NULL);
 
-    pthread_create(&Watchdog, NULL, (void*)&runWatchdog, NULL);
+    pthread_create(&Watchdog, NULL, runWatchdog, NULL);
 
     //join threads to free up memory
     pthread_join(Reader, NULL);

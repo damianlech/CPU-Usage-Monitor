@@ -20,7 +20,9 @@ int getNumberOfCpus()
     filePointer = fopen("/proc/stat", "r");
 
     //search how many lines start with "cpu" and increase counter but this much
-    int counter = 0;
+    int counter;
+
+    counter = 0;
 
     while(!feof(filePointer))
     {
@@ -48,7 +50,9 @@ int getnumberOfStatistics()
     //get the number of ' ' characters in the first line, since the first line always starts with "cpu  " - the number of spaces - 1 will equal the number of statistics
     fgets(singleLine, 100, filePointer);
 
-    int numberOfSpaces = 0;
+    int numberOfSpaces;
+
+    numberOfSpaces = 0;
 
     for (int i = 0; i < (int)strlen(singleLine); i++)
     {

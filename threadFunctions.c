@@ -16,14 +16,8 @@
 
 #include "calculations.h"
 
-//mutex and conditional variable defined
+//mutex and semaphores defined
 pthread_mutex_t mutexCheckReadData;
-
-//pthread_mutex_t mutexBuffer;
-
-pthread_cond_t matrixCreatedCondition;
-
-//pthread_cond_t startedAnalyzerCondition;
 
 sem_t semEmpty;
 
@@ -49,13 +43,10 @@ void* runReader()
         cpuCoresAsMatrixOld[i] = malloc(numberOfStatistics * sizeof(int));
     }
 
-
-
     //run until signal detected
     while(signalChecker == 0)
     {
-        printf("\n1\n");
-
+        //wait for semaphore
         sem_wait(&semEmpty);
 
         pthread_mutex_lock(&mutexCheckReadData);
@@ -68,49 +59,26 @@ void* runReader()
         //write current data to the matrix
         getDataFromFile();
 
-        printf("\n3\n");
-
         pthread_mutex_unlock(&mutexCheckReadData);
 
-
-        ///pthread_cond_signal(&matrixCreatedCondition);
-
-        printf("\n6\n");
-
+        //post semaphore
         sem_post(&semFull);
-
-        //wait for Analyzer
-        //pthread_cond_wait(&startedAnalyzerCondition, &mutexBuffer);
-
-        printf("\n7\n");
-
     }
-
-    //free up Analyzer
-    pthread_cond_signal(&matrixCreatedCondition);
-
     return 0;
 }
 
 //todo
 void* runAnalyzer()
 {
-
+    //allocate memory for CPU_percentage
     CPU_Percentage = malloc(numberOfCpus * sizeof(int));
+
     //run until signal detected
     while(signalChecker == 0)
     {
-        printf("\n2\n");
-
         sem_wait(&semFull);
 
         pthread_mutex_lock(&mutexCheckReadData);
-
-        printf("\n4\n");
-
-        //pthread_cond_wait(&matrixCreatedCondition, &mutexCheckReadData);
-
-        printf("\n5\n");
 
         //todo
         if (signalChecker == 0)
@@ -121,6 +89,7 @@ void* runAnalyzer()
         sem_post(&semEmpty);
 
     }
+    //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);
 
     return 0;

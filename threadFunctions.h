@@ -5,14 +5,8 @@
 //until specified signal is sent, threads will keep running
 extern int signalChecker;
 
-//mutexes and conditional variable
+//mutexes and semaphores
 extern pthread_mutex_t mutexCheckReadData;
-
-extern pthread_mutex_t mutexBuffer;
-
-extern pthread_cond_t matrixCreatedCondition;
-
-extern pthread_cond_t startedAnalyzerCondition;
 
 extern sem_t semEmpty;
 

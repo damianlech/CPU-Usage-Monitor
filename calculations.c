@@ -35,8 +35,6 @@ void calculateCpuUsage()
 {
     float PrevIdle, Idle, PrevNonIdle, NonIdle, PrevTotal, Total, totald, idled;
 
-
-
     for (int i = 0; i < numberOfCpus; i++)
     {
         PrevIdle = cpuCoresAsMatrixOld[i][IDLE] + cpuCoresAsMatrixOld[i][IOWAIT];

@@ -39,14 +39,8 @@ int main()
     signal(SIGINT, signalCheck);
     //signal(SIGTERM, signalCheck);
 
-    //initialize mutex and conditional variables
+    //initialize mutex and semaphores
     pthread_mutex_init(&mutexCheckReadData, NULL);
-
-    //pthread_mutex_init(&mutexBuffer, NULL);
-
-    pthread_cond_init(&matrixCreatedCondition, NULL);
-
-    //pthread_cond_init(&startedAnalyzerCondition, NULL);
 
     sem_init(&semEmpty, 0, 1);
 
@@ -72,19 +66,12 @@ int main()
 
     pthread_join(Analyzer, NULL);
 
-
-
-    //destroy mutex and conditional variables
+    //destroy mutex and semaphores
     pthread_mutex_destroy(&mutexCheckReadData);
 
-    pthread_cond_destroy(&matrixCreatedCondition);
-
     sem_destroy(&semEmpty);
+
     sem_destroy(&semFull);
-
-    //pthread_mutex_destroy(&mutexBuffer);
-
-    //pthread_cond_destroy(&startedAnalyzerCondition);
 
     //free up memory allocated to matrix
     for (int i = 0; i < numberOfCpus; i++)

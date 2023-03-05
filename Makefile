@@ -1,9 +1,11 @@
 CC = gcc
-
+#-c -Wall -Wextra -std=c99
 CFLAGS = -c -Wall -Wextra -std=c99
-
+###############################################################
 #CLANGFLAGS -Wno-declaration-after-statement to disable "mixing declarations and code is incompatible with standards before C99" since the code is supposed to be C99 and later compatible anyway
+###############################################################
 #-c -Weverything -std=c99 -Wno-declaration-after-statement
+###############################################################
 
 BINARIES = main.o getCpuInfo.o obtainCpuStatistics.o calculations.o threadFunctions.o varInitDestroy.o
 

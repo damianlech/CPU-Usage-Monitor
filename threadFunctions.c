@@ -42,14 +42,15 @@ sem_t semAnalyzerFull;
 int signalChecker = 0;
 
 //if signal for termination is received - change to 1 which will lead to closing of all threads
-void signalCheck()
+void signalCheck(void)
 {
     signalChecker = 1;
     printf("\nExiting program...\n");
 }
 
+
 //Run getDataFromFile every second and update the matrix with information
-void* runReader()
+void* runReader(void)
 {
     //alloc matrixes
     cpuCoresAsMatrix = malloc((unsigned long)numberOfCpus * sizeof(int *));
@@ -109,7 +110,7 @@ void* runReader()
 }
 
 //calculates CPU usage percentage
-void* runAnalyzer()
+void* runAnalyzer(void)
 {
     //allocate memory for CPU_percentage
     CPU_Percentage = malloc((unsigned long)numberOfCpus * sizeof(int));
@@ -142,7 +143,7 @@ void* runAnalyzer()
 }
 
 //Prints out CPU Percentage
-void* runPrinter()
+void* runPrinter(void)
 {
     //run until signal detected
     while(signalChecker == 0)
@@ -172,7 +173,7 @@ void* runPrinter()
 }
 
 //whenever thread finishes, it sends signal to the conditional variable. If the time between signals is longer then 2 seconds - watchdog closes the program
-void* runWatchdog()
+void* runWatchdog(void)
 {
 
     //run until signal detected

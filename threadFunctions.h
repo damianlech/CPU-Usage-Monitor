@@ -8,9 +8,13 @@ extern int signalChecker;
 //mutexes and semaphores
 extern pthread_mutex_t mutexCheckReadData;
 
-extern sem_t semEmpty;
+extern sem_t semReaderEmpty;
 
-extern sem_t semFull;
+extern sem_t semReaderFull;
+
+extern sem_t semAnalyzerEmpty;
+
+extern sem_t semAnalyzerFull;
 
 //Functions for threads to use
 void* runReader(); //run reader and update global variable cpuCoresAsMatrix

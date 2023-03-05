@@ -50,8 +50,6 @@ float *calculateCpuUsage()
         idled = Idle - PrevIdle;
 
         CPU_Percentage[i] = ((totald - idled)/totald) * 100;
-
-        printf("%f\n\n", CPU_Percentage[i]);
     }
 
     return(CPU_Percentage);

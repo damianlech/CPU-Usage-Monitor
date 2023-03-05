@@ -19,9 +19,13 @@
 //mutex and semaphores defined
 pthread_mutex_t mutexCheckReadData;
 
-sem_t semEmpty;
+sem_t semReaderEmpty;
 
-sem_t semFull;
+sem_t semReaderFull;
+
+sem_t semAnalyzerEmpty;
+
+sem_t semAnalyzerFull;
 
 int signalChecker = 0;
 
@@ -47,7 +51,7 @@ void* runReader()
     while(signalChecker == 0)
     {
         //wait for semaphore
-        sem_wait(&semEmpty);
+        sem_wait(&semReaderEmpty);
 
         pthread_mutex_lock(&mutexCheckReadData);
 
@@ -62,7 +66,7 @@ void* runReader()
         pthread_mutex_unlock(&mutexCheckReadData);
 
         //post semaphore
-        sem_post(&semFull);
+        sem_post(&semReaderFull);
     }
 
     //free allocated matrixes
@@ -92,7 +96,9 @@ void* runAnalyzer()
     //run until signal detected
     while(signalChecker == 0)
     {
-        sem_wait(&semFull);
+        sem_wait(&semReaderFull);
+
+        sem_wait(&semAnalyzerEmpty);
 
         pthread_mutex_lock(&mutexCheckReadData);
 
@@ -102,10 +108,40 @@ void* runAnalyzer()
 
         pthread_mutex_unlock(&mutexCheckReadData);
 
-        sem_post(&semEmpty);
+        sem_post(&semReaderEmpty);
+
+        sem_post(&semAnalyzerFull);
     }
     //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);
 
+    return 0;
+}
+
+//calculates CPU usage percentage
+void* runPrinter()
+{
+    //run until signal detected
+    while(signalChecker == 0)
+    {
+        sem_wait(&semAnalyzerFull);
+
+        if (signalChecker == 0)
+        {
+            for (int i = 0; i < numberOfCpus; i++)
+            {
+                if (i == 0)
+                {
+                    printf("Total CPU usage: %.02f%%\n", CPU_Percentage[i]);
+                }
+                else
+                {
+                    printf("CPU %d usage:     %.02f%%\n", i, CPU_Percentage[i]);
+                }
+            }
+            printf("\n");
+        }
+        sem_post(&semAnalyzerEmpty);
+    }
     return 0;
 }

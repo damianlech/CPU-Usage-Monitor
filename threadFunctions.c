@@ -18,7 +18,7 @@
 
 #include "calculations.h"
 
-//mutex and semaphores defined
+//mutexes and semaphores defined
 pthread_mutex_t mutexCheckReadData;
 
 pthread_mutex_t mutexWatchdog;
@@ -34,6 +34,13 @@ sem_t semAnalyzerEmpty;
 sem_t semAnalyzerFull;
 
 int signalChecker = 0;
+
+//if signal for termination is received - change to 1 which will lead to closing of all threads
+void signalCheck()
+{
+    signalChecker = 1;
+    printf("\nExiting program...\n");
+}
 
 //Run getDataFromFile every second and update the matrix with information
 void* runReader()
@@ -89,10 +96,7 @@ void* runReader()
     {
         free(cpuCoresAsMatrixOld[i]);
     }
-
     free(cpuCoresAsMatrixOld);
-
-
 
     return 0;
 }
@@ -127,8 +131,6 @@ void* runAnalyzer()
     //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);
 
-
-
     return 0;
 }
 
@@ -162,20 +164,24 @@ void* runPrinter()
     return 0;
 }
 
-//sss
+//whenever thread finishes, it sends signal to the conditional variable. If the time between signals is longer then 2 seconds - watchdog closes the program
 void* runWatchdog()
 {
 
     //run until signal detected
     while(signalChecker == 0)
     {
+        //read starting time
         time_t begin = time(NULL);
 
+        //check for signal from threads
         if(signalChecker == 0)
             pthread_cond_wait(&condWatchdog, &mutexWatchdog);
 
+        //read end time
         time_t end = time(NULL);
 
+        //save time or close the program depending on the difference in time
         if (end - begin >= 2)
         {
             printf("Time waiting for a thread exceeded 2 seconds... Exiting program\n");
@@ -183,9 +189,9 @@ void* runWatchdog()
         }
         else
         {
-            printf("The elapsed time is %ld seconds\n\n", (end - begin));
+            if (signalChecker == 0)
+                printf("The elapsed time is %ld seconds\n\n", (end - begin));
         }
-
     }
     return 0;
 }

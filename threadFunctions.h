@@ -27,6 +27,6 @@ void* runAnalyzer(); //read cpuCoresAsMatrix and convert it into cpu usage
 
 void* runPrinter(); //Print out CPU usage every second
 
-void* runWatchdog();
+void* runWatchdog(); //Await for signal from threads and read the time in between
 
 #endif // THREADFUNCTIONS_H

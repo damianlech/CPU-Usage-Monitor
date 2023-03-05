@@ -24,17 +24,8 @@ Author: Damian Lech
 
 #include "threadFunctions.h"
 
-
-
-void signalCheck()
-{
-    signalChecker = 1;
-    printf("\nExiting program...\n");
-}
-
 int main()
 {
-
     //signal checks
     signal(SIGINT, signalCheck);
     //signal(SIGTERM, signalCheck);

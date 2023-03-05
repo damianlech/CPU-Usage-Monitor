@@ -64,6 +64,22 @@ void* runReader()
         //post semaphore
         sem_post(&semFull);
     }
+
+    //free allocated matrixes
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        free(cpuCoresAsMatrix[i]);
+    }
+
+    free(cpuCoresAsMatrix);
+
+    for (int i = 0; i < numberOfCpus; i++)
+    {
+        free(cpuCoresAsMatrixOld[i]);
+    }
+
+    free(cpuCoresAsMatrixOld);
+
     return 0;
 }
 

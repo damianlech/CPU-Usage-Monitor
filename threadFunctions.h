@@ -17,4 +17,6 @@ void* runReader(); //run reader and update global variable cpuCoresAsMatrix
 
 void* runAnalyzer(); //read cpuCoresAsMatrix and convert it into cpu usage
 
+void* runPrinter(); //Print out CPU usage every second
+
 #endif // THREADFUNCTIONS_H

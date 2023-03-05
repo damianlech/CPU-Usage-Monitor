@@ -56,19 +56,21 @@ int main()
 
     pthread_t Analyzer;
 
-    pthread_t Printer;
+    //pthread_t Printer;
 
     //start threads TODO
     pthread_create(&Reader, NULL, (void*)&runReader, NULL);
 
     pthread_create(&Analyzer, NULL, (void*)&runAnalyzer, NULL);
 
-    pthread_create(&Printer, NULL, (void*)&runAnalyzer, NULL);
+    //pthread_create(&Printer, NULL, (void*)&runPrinter, NULL);
 
     //join threads to free up memory
     pthread_join(Reader, NULL);
 
     pthread_join(Analyzer, NULL);
+
+    //pthread_join(Printer, NULL);
 
     //destroy mutex and semaphores
     pthread_mutex_destroy(&mutexCheckReadData);
@@ -78,19 +80,7 @@ int main()
     sem_destroy(&semFull);
 
     //free up memory allocated to matrix
-    for (int i = 0; i < numberOfCpus; i++)
-    {
-        free(cpuCoresAsMatrix[i]);
-    }
 
-    free(cpuCoresAsMatrix);
-
-    for (int i = 0; i < numberOfCpus; i++)
-    {
-        free(cpuCoresAsMatrixOld[i]);
-    }
-
-    free(cpuCoresAsMatrixOld);
 
     return 0;
 }

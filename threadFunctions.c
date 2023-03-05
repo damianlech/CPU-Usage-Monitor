@@ -118,7 +118,7 @@ void* runAnalyzer()
     return 0;
 }
 
-//calculates CPU usage percentage
+//Prints out CPU Percentage
 void* runPrinter()
 {
     //run until signal detected

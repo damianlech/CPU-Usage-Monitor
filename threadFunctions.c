@@ -8,6 +8,8 @@
 
 #include <pthread.h>
 
+#include <semaphore.h>
+
 #include "obtainCpuStatistics.h"
 
 #include "getCpuInfo.h"
@@ -17,11 +19,15 @@
 //mutex and conditional variable defined
 pthread_mutex_t mutexCheckReadData;
 
-pthread_mutex_t mutexBuffer;
+//pthread_mutex_t mutexBuffer;
 
 pthread_cond_t matrixCreatedCondition;
 
-pthread_cond_t startedAnalyzerCondition;
+//pthread_cond_t startedAnalyzerCondition;
+
+sem_t semEmpty;
+
+sem_t semFull;
 
 int signalChecker = 0;
 
@@ -48,6 +54,10 @@ void* runReader()
     //run until signal detected
     while(signalChecker == 0)
     {
+        printf("\n1\n");
+
+        sem_wait(&semEmpty);
+
         pthread_mutex_lock(&mutexCheckReadData);
 
         //write old data to the matrix
@@ -58,12 +68,21 @@ void* runReader()
         //write current data to the matrix
         getDataFromFile();
 
+        printf("\n3\n");
+
         pthread_mutex_unlock(&mutexCheckReadData);
 
-        pthread_cond_signal(&matrixCreatedCondition);
+
+        ///pthread_cond_signal(&matrixCreatedCondition);
+
+        printf("\n6\n");
+
+        sem_post(&semFull);
 
         //wait for Analyzer
-        pthread_cond_wait(&startedAnalyzerCondition, &mutexBuffer);
+        //pthread_cond_wait(&startedAnalyzerCondition, &mutexBuffer);
+
+        printf("\n7\n");
 
     }
 
@@ -76,12 +95,22 @@ void* runReader()
 //todo
 void* runAnalyzer()
 {
+
+    CPU_Percentage = malloc(numberOfCpus * sizeof(int));
     //run until signal detected
     while(signalChecker == 0)
     {
+        printf("\n2\n");
+
+        sem_wait(&semFull);
+
         pthread_mutex_lock(&mutexCheckReadData);
 
-        pthread_cond_wait(&matrixCreatedCondition, &mutexCheckReadData);
+        printf("\n4\n");
+
+        //pthread_cond_wait(&matrixCreatedCondition, &mutexCheckReadData);
+
+        printf("\n5\n");
 
         //todo
         if (signalChecker == 0)
@@ -89,9 +118,10 @@ void* runAnalyzer()
 
         pthread_mutex_unlock(&mutexCheckReadData);
 
-        //free Reader
-        pthread_cond_signal(&startedAnalyzerCondition);
+        sem_post(&semEmpty);
 
     }
+    free(CPU_Percentage);
+
     return 0;
 }

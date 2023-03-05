@@ -14,6 +14,10 @@ extern pthread_cond_t matrixCreatedCondition;
 
 extern pthread_cond_t startedAnalyzerCondition;
 
+extern sem_t semEmpty;
+
+extern sem_t semFull;
+
 //Functions for threads to use
 void* runReader(); //run reader and update global variable cpuCoresAsMatrix
 

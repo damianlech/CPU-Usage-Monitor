@@ -14,6 +14,8 @@ Author: Damian Lech
 
 #include <signal.h>
 
+#include <semaphore.h>
+
 #include "getCpuInfo.h"
 
 #include "obtainCpuStatistics.h"
@@ -40,12 +42,15 @@ int main()
     //initialize mutex and conditional variables
     pthread_mutex_init(&mutexCheckReadData, NULL);
 
-    pthread_mutex_init(&mutexBuffer, NULL);
+    //pthread_mutex_init(&mutexBuffer, NULL);
 
     pthread_cond_init(&matrixCreatedCondition, NULL);
 
-    pthread_cond_init(&startedAnalyzerCondition, NULL);
+    //pthread_cond_init(&startedAnalyzerCondition, NULL);
 
+    sem_init(&semEmpty, 0, 1);
+
+    sem_init(&semFull, 0, 0);
 
     //initialize cpu info
     getNumberOfCpus();
@@ -67,14 +72,19 @@ int main()
 
     pthread_join(Analyzer, NULL);
 
+
+
     //destroy mutex and conditional variables
     pthread_mutex_destroy(&mutexCheckReadData);
 
     pthread_cond_destroy(&matrixCreatedCondition);
 
-    pthread_mutex_destroy(&mutexBuffer);
+    sem_destroy(&semEmpty);
+    sem_destroy(&semFull);
 
-    pthread_cond_destroy(&startedAnalyzerCondition);
+    //pthread_mutex_destroy(&mutexBuffer);
+
+    //pthread_cond_destroy(&startedAnalyzerCondition);
 
     //free up memory allocated to matrix
     for (int i = 0; i < numberOfCpus; i++)

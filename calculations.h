@@ -18,9 +18,8 @@
 
 #define STEAL       7
 
-extern int *CPU_Percentage;
+extern float *CPU_Percentage;
 
-void calculateCpuUsage();
-
+float *calculateCpuUsage();
 
 #endif // CALCULATIONS_H

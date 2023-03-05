@@ -6,6 +6,8 @@
 
 #include <assert.h>
 
+#include "calculations.h"
+
 #include "getCpuInfo.h"
 
 #include "obtainCpuStatistics.h"
@@ -30,9 +32,18 @@ int main()
 
     int numberOfStatistics = getnumberOfStatistics();
 
-    cpuCoresAsMatrix = getDataFromFile(numberOfCpus, numberOfStatistics);
+    assert(getDataFromFile != NULL);
 
-    assert(cpuCoresAsMatrix != NULL);
+    assert(getOldDataFromFile != NULL);
+
+    printf("Success!!!\n\n");
+
+    //calculaions
+    printf("Testing calculations.c...\n");
+
+    float *CPU_Percentage;
+
+    assert(calculateCpuUsage != NULL);
 
     printf("Success!!!\n\n");
 

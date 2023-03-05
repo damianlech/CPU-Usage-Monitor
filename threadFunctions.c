@@ -67,7 +67,7 @@ void* runReader()
     return 0;
 }
 
-//todo
+//calculates CPU usage percentage
 void* runAnalyzer()
 {
     //allocate memory for CPU_percentage
@@ -80,14 +80,13 @@ void* runAnalyzer()
 
         pthread_mutex_lock(&mutexCheckReadData);
 
-        //todo
+        //Run calculate function
         if (signalChecker == 0)
             calculateCpuUsage();
 
         pthread_mutex_unlock(&mutexCheckReadData);
 
         sem_post(&semEmpty);
-
     }
     //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);

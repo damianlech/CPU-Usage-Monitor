@@ -16,7 +16,7 @@ int **cpuCoresAsMatrix;
 int **cpuCoresAsMatrixOld;
 
 //create a dynamically allocated 2D matrix and fill it with statistics using tokens
-void getDataFromFile()
+int **getDataFromFile()
 {
     filePointer = fopen("/proc/stat", "r");
 
@@ -42,9 +42,11 @@ void getDataFromFile()
         }
     }
     fclose(filePointer);
+
+    return(cpuCoresAsMatrix);
 }
 
-void getOldDataFromFile()
+int **getOldDataFromFile()
 {
     filePointer = fopen("/proc/stat", "r");
 
@@ -69,6 +71,7 @@ void getOldDataFromFile()
             cpuCoresAsMatrixOld[i][j] = atoi(token);
         }
     }
-
     fclose(filePointer);
+
+    return(cpuCoresAsMatrixOld);
 }

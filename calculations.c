@@ -29,9 +29,9 @@
     CPU_Percentage = (totald - idled)/totald
 */
 
-int *CPU_Percentage;
+float *CPU_Percentage;
 
-void calculateCpuUsage()
+float *calculateCpuUsage()
 {
     float PrevIdle, Idle, PrevNonIdle, NonIdle, PrevTotal, Total, totald, idled;
 
@@ -49,26 +49,10 @@ void calculateCpuUsage()
         totald = Total - PrevTotal;
         idled = Idle - PrevIdle;
 
-        float hmm = ((totald - idled)/totald) * 100;
+        CPU_Percentage[i] = ((totald - idled)/totald) * 100;
 
-        printf("%f, %f, %f\n\n",totald, idled, hmm);
-
-        fflush(stdout);
+        printf("%f\n\n", CPU_Percentage[i]);
     }
 
-    for (int i = 0; i< numberOfCpus; i++)
-    {
-        for (int j = 0; j<numberOfStatistics; j++)
-            printf("%d ", cpuCoresAsMatrixOld[i][j]);
-        printf("\n");
-    }
-
-    printf("\n");
-
-    for (int i = 0; i< numberOfCpus; i++)
-    {
-        for (int j = 0; j<numberOfStatistics; j++)
-            printf("%d ", cpuCoresAsMatrix[i][j]);
-        printf("\n");
-    }
+    return(CPU_Percentage);
 }

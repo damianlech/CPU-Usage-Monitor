@@ -56,10 +56,14 @@ int main()
 
     pthread_t Analyzer;
 
+    pthread_t Printer;
+
     //start threads TODO
     pthread_create(&Reader, NULL, (void*)&runReader, NULL);
 
     pthread_create(&Analyzer, NULL, (void*)&runAnalyzer, NULL);
+
+    pthread_create(&Printer, NULL, (void*)&runAnalyzer, NULL);
 
     //join threads to free up memory
     pthread_join(Reader, NULL);

@@ -2,6 +2,8 @@
 
 #include <semaphore.h>
 
+#include <stdio.h>
+
 #include "varInitDestroy.h"
 
 #include "threadFunctions.h"
@@ -13,6 +15,11 @@ void varInit()
     pthread_mutex_init(&mutexWatchdog, NULL);
 
     pthread_cond_init(&condWatchdog, NULL);
+
+    pthread_mutex_init(&mutexLogger, NULL);
+
+    pthread_cond_init(&condLogger, NULL);
+
 
     sem_init(&semReaderEmpty, 0, 1);
 
@@ -31,6 +38,10 @@ void varDestroy()
     pthread_mutex_destroy(&mutexWatchdog);
 
     pthread_cond_destroy(&condWatchdog);
+
+    pthread_mutex_destroy(&mutexLogger);
+
+    pthread_cond_destroy(&condLogger);
 
     sem_destroy(&semReaderEmpty);
 

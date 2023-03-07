@@ -74,6 +74,8 @@ int main()
 
     pthread_join(Logger, NULL);
 
+
+
     //destroy mutex and semaphores
     varDestroy();
 

@@ -10,9 +10,11 @@ extern pthread_mutex_t mutexCheckReadData;
 
 extern pthread_mutex_t mutexWatchdog;
 
-extern pthread_mutex_t mutexQueue;
-
 extern pthread_cond_t condWatchdog;
+
+extern pthread_mutex_t mutexLogger;
+
+extern pthread_cond_t condLogger;
 
 extern sem_t semReaderEmpty;
 

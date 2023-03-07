@@ -27,6 +27,10 @@ pthread_mutex_t mutexWatchdog;
 
 pthread_cond_t condWatchdog;
 
+pthread_mutex_t mutexLogger;
+
+pthread_cond_t condLogger;
+
 sem_t semReaderEmpty;
 
 sem_t semReaderFull;
@@ -38,6 +42,8 @@ sem_t semAnalyzerFull;
 int signalChecker = 0;
 
 int watchTime = 0;
+
+
 
 //if signal for termination is received - change to 1 which will lead to closing of all threads
 void signalCheck(int)
@@ -160,7 +166,9 @@ void* runPrinter(void *)
         }
         sem_post(&semAnalyzerEmpty);
 
-        pthread_cond_broadcast(&condWatchdog);
+        pthread_cond_signal(&condWatchdog);
+
+        pthread_cond_signal(&condLogger);
     }
     return 0;
 }
@@ -198,7 +206,8 @@ void* runLogger(void *)
 {
     FILE *fptr;
 
-    fptr = fopen("Log", "w");
+        fptr = fopen("Log", "w");
+
 
     fprintf(fptr, "\nLog start\n");
 
@@ -206,52 +215,33 @@ void* runLogger(void *)
 
     while(signalChecker == 0)
     {
-        pthread_cond_wait(&condWatchdog, &mutexWatchdog);
+        pthread_cond_wait(&condLogger, &mutexLogger);
 
-        fprintf(fptr, "\nReader Stats Old:\n");
-
-        for (int i = 0; i < numberOfCpus; i++)
+        if (signalChecker == 0)
         {
-            for (int j = 0; j < numberOfStatistics; j++)
+            for (int i = 0; i < numberOfCpus; i++)
             {
-                fprintf(fptr, "%d ", cpuCoresAsMatrixOld[i][j]);
+                if (i == 0)
+                {
+                    fprintf(fptr, "Total CPU usage: %.02f%%\n", (double)CPU_Percentage[i]);
+                }
+                else
+                {
+                    fprintf(fptr, "CPU %d usage:     %.02f%%\n", i, (double)CPU_Percentage[i]);
+                }
             }
             fprintf(fptr, "\n");
+
+            fprintf(fptr, "The elapsed time for threads is %d seconds\n\n", (watchTime));
         }
-
-        fprintf(fptr, "\nReader Stats:\n");
-
-        for (int i = 0; i < numberOfCpus; i++)
-        {
-            for (int j = 0; j < numberOfStatistics; j++)
-            {
-                fprintf(fptr, "%d ", cpuCoresAsMatrix[i][j]);
-            }
-            fprintf(fptr, "\n");
-        }
-
-        fprintf(fptr, "\nAnalyzer Stats:\n");
-
-        for (int i = 0; i < numberOfCpus; i++)
-        {
-            if (i == 0)
-            {
-                fprintf(fptr, "Total CPU usage: %.02f%%\n", (double)CPU_Percentage[i]);
-            }
-            else
-            {
-                fprintf(fptr, "CPU %d usage:     %.02f%%\n", i, (double)CPU_Percentage[i]);
-            }
-        }
-        fprintf(fptr, "\n");
-
-        fprintf(fptr, "The elapsed time for threads is %d seconds\n\n", (watchTime));
     }
 
     if (signalChecker == 2)
+    {
         fprintf(fptr, "Time waiting for a threads exceeded 2 seconds... Exiting program\n");
+    }
 
+        fclose(fptr);
 
-    fclose(fptr);
     return 0;
 }

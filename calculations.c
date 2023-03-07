@@ -37,11 +37,11 @@ float *calculateCpuUsage()
 
     for (int i = 0; i < numberOfCpus; i++)
     {
-        PrevIdle = cpuCoresAsMatrixOld[i][IDLE] + cpuCoresAsMatrixOld[i][IOWAIT];
-        Idle = cpuCoresAsMatrix[i][IDLE] + cpuCoresAsMatrix[i][IOWAIT];
+        PrevIdle = (float)cpuCoresAsMatrixOld[i][IDLE] + (float)cpuCoresAsMatrixOld[i][IOWAIT];
+        Idle = (float)cpuCoresAsMatrix[i][IDLE] + (float)cpuCoresAsMatrix[i][IOWAIT];
 
-        PrevNonIdle = cpuCoresAsMatrixOld[i][USER] + cpuCoresAsMatrixOld[i][NICE] + cpuCoresAsMatrixOld[i][SYSTEM] + cpuCoresAsMatrixOld[i][IRQ] + cpuCoresAsMatrixOld[i][SOFTIRQ] + cpuCoresAsMatrixOld[i][STEAL];
-        NonIdle = cpuCoresAsMatrix[i][USER] + cpuCoresAsMatrix[i][NICE] + cpuCoresAsMatrix[i][SYSTEM] + cpuCoresAsMatrix[i][IRQ] + cpuCoresAsMatrix[i][SOFTIRQ] + cpuCoresAsMatrix[i][STEAL];
+        PrevNonIdle = (float)cpuCoresAsMatrixOld[i][USER] + (float)cpuCoresAsMatrixOld[i][NICE] + (float)cpuCoresAsMatrixOld[i][SYSTEM] + (float)cpuCoresAsMatrixOld[i][IRQ] + (float)cpuCoresAsMatrixOld[i][SOFTIRQ] + (float)cpuCoresAsMatrixOld[i][STEAL];
+        NonIdle = (float)cpuCoresAsMatrix[i][USER] + (float)cpuCoresAsMatrix[i][NICE] + (float)cpuCoresAsMatrix[i][SYSTEM] + (float)cpuCoresAsMatrix[i][IRQ] + (float)cpuCoresAsMatrix[i][SOFTIRQ] + (float)cpuCoresAsMatrix[i][STEAL];
 
         PrevTotal = PrevIdle + PrevNonIdle;
         Total = Idle + NonIdle;

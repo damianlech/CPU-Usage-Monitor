@@ -52,7 +52,7 @@ int main()
     pthread_t Logger;
 
     //start threads
-    pthread_create(&Reader, NULL, runReader, NULL);
+    pthread_create(&Reader, NULL, runReader, (void *)NULL);
 
     pthread_create(&Analyzer, NULL, runAnalyzer, NULL);
 

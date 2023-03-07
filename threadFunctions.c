@@ -41,18 +41,22 @@ sem_t semAnalyzerFull;
 
 int signalChecker = 0;
 
-int watchTime = 0;
+static long watchTime = 0;
 
 //if signal for termination is received - change to 1 which will lead to closing of all threads
-void signalCheck(int)
+void signalCheck(int arg)
 {
+    (void)arg;
+
     signalChecker = 1;
     printf("\nExiting program...\n");
 }
 
 //Run getDataFromFile every second and update the matrix with information
-void* runReader(void *)
+void *runReader(void *arg)
 {
+    (void)arg;
+
     //alloc matrixes
     cpuCoresAsMatrix = malloc((unsigned long)numberOfCpus * sizeof(int *));
 
@@ -108,8 +112,10 @@ void* runReader(void *)
 }
 
 //calculates CPU usage percentage
-void* runAnalyzer(void *)
+void *runAnalyzer(void *arg)
 {
+    (void)arg;
+
     //allocate memory for CPU_percentage
     CPU_Percentage = malloc((unsigned long)numberOfCpus * sizeof(int));
 
@@ -139,8 +145,10 @@ void* runAnalyzer(void *)
 }
 
 //Prints out CPU Percentage
-void* runPrinter(void *)
+void *runPrinter(void *arg)
 {
+    (void)arg;
+
     //run until signal detected
     while(signalChecker == 0)
     {
@@ -171,8 +179,10 @@ void* runPrinter(void *)
 }
 
 //whenever thread finishes, it sends signal to the conditional variable. If the time between signals is longer then 2 seconds - watchdog closes the program
-void* runWatchdog(void *)
+void *runWatchdog(void *arg)
 {
+    (void)arg;
+
     //run until signal detected
     while(signalChecker == 0)
     {
@@ -199,8 +209,10 @@ void* runWatchdog(void *)
 }
 
 //after every thread loop - write related information into a log file
-void* runLogger(void *)
+void *runLogger(void *arg)
 {
+    (void)arg;
+
     //create a file pointer, open a file and write into it
     FILE *fptr;
 
@@ -231,7 +243,7 @@ void* runLogger(void *)
             }
             fprintf(fptr, "\n");
 
-            fprintf(fptr, "The elapsed time for threads is %d seconds\n\n", (watchTime));
+            fprintf(fptr, "The elapsed time for threads is %ld seconds\n\n", (watchTime));
         }
     }
 

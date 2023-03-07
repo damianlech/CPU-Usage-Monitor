@@ -25,17 +25,17 @@ extern sem_t semAnalyzerEmpty;
 extern sem_t semAnalyzerFull;
 
 //Functions for threads to use
-void* runReader(void *); //run reader and update global variable cpuCoresAsMatrix
+void *runReader(void *arg); //run reader and update global variable cpuCoresAsMatrix
 
-void* runAnalyzer(void *); //read cpuCoresAsMatrix and convert it into cpu usage
+void *runAnalyzer(void *arg); //read cpuCoresAsMatrix and convert it into cpu usage
 
-void* runPrinter(void *); //Print out CPU usage every second
+void *runPrinter(void *arg); //Print out CPU usage every second
 
-void* runWatchdog(void *); //Await for signal from threads and read the time in between
+void *runWatchdog(void *arg); //Await for signal from threads and read the time in between
 
-void* runLogger(void *); //Write debug info to file
+void *runLogger(void *arg); //Write debug info to file
 
-void signalCheck(int); //check for terminate signal
+void signalCheck(int arg); //check for terminate signal
 
 
 

@@ -8,6 +8,7 @@
 
 #include "threadFunctions.h"
 
+//initialize all mutexes, conditional variables and seaphores
 void varInit()
 {
     pthread_mutex_init(&mutexCheckReadData, NULL);
@@ -20,7 +21,6 @@ void varInit()
 
     pthread_cond_init(&condLogger, NULL);
 
-
     sem_init(&semReaderEmpty, 0, 1);
 
     sem_init(&semReaderFull, 0, 0);
@@ -30,7 +30,7 @@ void varInit()
     sem_init(&semAnalyzerFull, 0, 0);
 }
 
-
+//destroy all mutexes, conditional variables and seaphores
 void varDestroy()
 {
     pthread_mutex_destroy(&mutexCheckReadData);

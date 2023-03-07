@@ -46,5 +46,4 @@ int main()
     assert(calculateCpuUsage != NULL);
 
     printf("Success!!!\n\n");
-
 }

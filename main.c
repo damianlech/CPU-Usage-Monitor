@@ -30,8 +30,7 @@ int main()
 {
     //signal checks
     signal(SIGINT, signalCheck);
-    //signal(SIGTERM, signalCheck);
-
+    signal(SIGTERM, signalCheck);
 
     //initialize mutex and semaphores
     varInit();
@@ -52,7 +51,7 @@ int main()
 
     pthread_t Logger;
 
-    //start threads TODO
+    //start threads
     pthread_create(&Reader, NULL, runReader, NULL);
 
     pthread_create(&Analyzer, NULL, runAnalyzer, NULL);
@@ -73,8 +72,6 @@ int main()
     pthread_join(Watchdog, NULL);
 
     pthread_join(Logger, NULL);
-
-
 
     //destroy mutex and semaphores
     varDestroy();

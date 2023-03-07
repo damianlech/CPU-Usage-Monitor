@@ -35,7 +35,7 @@ void* runWatchdog(void *); //Await for signal from threads and read the time in 
 
 void* runLogger(void *); //Write debug info to file
 
-void signalCheck(int);
+void signalCheck(int); //check for terminate signal
 
 
 

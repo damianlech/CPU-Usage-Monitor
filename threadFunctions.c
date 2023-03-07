@@ -43,15 +43,12 @@ int signalChecker = 0;
 
 int watchTime = 0;
 
-
-
 //if signal for termination is received - change to 1 which will lead to closing of all threads
 void signalCheck(int)
 {
     signalChecker = 1;
     printf("\nExiting program...\n");
 }
-
 
 //Run getDataFromFile every second and update the matrix with information
 void* runReader(void *)
@@ -176,7 +173,6 @@ void* runPrinter(void *)
 //whenever thread finishes, it sends signal to the conditional variable. If the time between signals is longer then 2 seconds - watchdog closes the program
 void* runWatchdog(void *)
 {
-
     //run until signal detected
     while(signalChecker == 0)
     {
@@ -202,17 +198,20 @@ void* runWatchdog(void *)
     return 0;
 }
 
+//after every thread loop - write related information into a log file
 void* runLogger(void *)
 {
+    //create a file pointer, open a file and write into it
     FILE *fptr;
 
-        fptr = fopen("Log", "w");
-
+    fptr = fopen("Log", "w");
 
     fprintf(fptr, "\nLog start\n");
 
+    //basic information
     fprintf(fptr, "\nNo of CPUs detected: %d, number of statistics detected: %d\n", numberOfCpus, numberOfStatistics);
 
+    //loop information
     while(signalChecker == 0)
     {
         pthread_cond_wait(&condLogger, &mutexLogger);
@@ -236,12 +235,14 @@ void* runLogger(void *)
         }
     }
 
+    //if threads hang up for at least 2 seconds
     if (signalChecker == 2)
     {
         fprintf(fptr, "Time waiting for a threads exceeded 2 seconds... Exiting program\n");
     }
 
-        fclose(fptr);
+    //close the file
+    fclose(fptr);
 
     return 0;
 }

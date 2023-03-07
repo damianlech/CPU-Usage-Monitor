@@ -32,6 +32,7 @@ int main()
     signal(SIGINT, signalCheck);
     //signal(SIGTERM, signalCheck);
 
+
     //initialize mutex and semaphores
     varInit();
 
@@ -49,6 +50,8 @@ int main()
 
     pthread_t Watchdog;
 
+    pthread_t Logger;
+
     //start threads TODO
     pthread_create(&Reader, NULL, runReader, NULL);
 
@@ -58,6 +61,8 @@ int main()
 
     pthread_create(&Watchdog, NULL, runWatchdog, NULL);
 
+    pthread_create(&Logger, NULL, runLogger, NULL);
+
     //join threads to free up memory
     pthread_join(Reader, NULL);
 
@@ -66,6 +71,8 @@ int main()
     pthread_join(Printer, NULL);
 
     pthread_join(Watchdog, NULL);
+
+    pthread_join(Logger, NULL);
 
     //destroy mutex and semaphores
     varDestroy();

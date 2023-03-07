@@ -12,11 +12,7 @@ void varInit()
 
     pthread_mutex_init(&mutexWatchdog, NULL);
 
-    pthread_cond_init(&condReader, NULL);
-
-    pthread_cond_init(&condAnalyzer, NULL);
-
-    pthread_cond_init(&condPrinter, NULL);
+    pthread_cond_init(&condWatchdog, NULL);
 
     sem_init(&semReaderEmpty, 0, 1);
 
@@ -34,11 +30,7 @@ void varDestroy()
 
     pthread_mutex_destroy(&mutexWatchdog);
 
-    pthread_cond_destroy(&condReader);
-
-    pthread_cond_destroy(&condAnalyzer);
-
-    pthread_cond_destroy(&condPrinter);
+    pthread_cond_destroy(&condWatchdog);
 
     sem_destroy(&semReaderEmpty);
 

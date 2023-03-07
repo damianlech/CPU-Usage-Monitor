@@ -25,11 +25,7 @@ pthread_mutex_t mutexCheckReadData;
 
 pthread_mutex_t mutexWatchdog;
 
-pthread_cond_t condReader;
-
-pthread_cond_t condAnalyzer;
-
-pthread_cond_t condPrinter;
+pthread_cond_t condWatchdog;
 
 sem_t semReaderEmpty;
 
@@ -41,8 +37,10 @@ sem_t semAnalyzerFull;
 
 int signalChecker = 0;
 
+int watchTime = 0;
+
 //if signal for termination is received - change to 1 which will lead to closing of all threads
-void signalCheck(void)
+void signalCheck(int)
 {
     signalChecker = 1;
     printf("\nExiting program...\n");
@@ -50,7 +48,7 @@ void signalCheck(void)
 
 
 //Run getDataFromFile every second and update the matrix with information
-void* runReader(void)
+void* runReader(void *)
 {
     //alloc matrixes
     cpuCoresAsMatrix = malloc((unsigned long)numberOfCpus * sizeof(int *));
@@ -87,9 +85,6 @@ void* runReader(void)
 
         //post semaphore
         sem_post(&semReaderFull);
-
-        pthread_cond_signal(&condReader);
-
     }
 
     //free allocated matrixes
@@ -110,7 +105,7 @@ void* runReader(void)
 }
 
 //calculates CPU usage percentage
-void* runAnalyzer(void)
+void* runAnalyzer(void *)
 {
     //allocate memory for CPU_percentage
     CPU_Percentage = malloc((unsigned long)numberOfCpus * sizeof(int));
@@ -133,8 +128,6 @@ void* runAnalyzer(void)
         sem_post(&semReaderEmpty);
 
         sem_post(&semAnalyzerFull);
-
-        pthread_cond_signal(&condAnalyzer);
     }
     //free up memory allocated to CPU_Percentage
     free(CPU_Percentage);
@@ -143,7 +136,7 @@ void* runAnalyzer(void)
 }
 
 //Prints out CPU Percentage
-void* runPrinter(void)
+void* runPrinter(void *)
 {
     //run until signal detected
     while(signalChecker == 0)
@@ -167,13 +160,13 @@ void* runPrinter(void)
         }
         sem_post(&semAnalyzerEmpty);
 
-        pthread_cond_signal(&condPrinter);
+        pthread_cond_broadcast(&condWatchdog);
     }
     return 0;
 }
 
 //whenever thread finishes, it sends signal to the conditional variable. If the time between signals is longer then 2 seconds - watchdog closes the program
-void* runWatchdog(void)
+void* runWatchdog(void *)
 {
 
     //run until signal detected
@@ -184,66 +177,81 @@ void* runWatchdog(void)
 
         //check for signal from threads
         if(signalChecker == 0)
-            pthread_cond_wait(&condReader, &mutexWatchdog);
+            pthread_cond_wait(&condWatchdog, &mutexWatchdog);
 
         //read end time
         time_t ReaderEnd = time(NULL);
 
-        //save time or close the program depending on the difference in time
-        if (ReaderEnd - ReaderBegin >= 2)
-        {
-            printf("Time waiting for a thread Reader exceeded 2 seconds... Exiting program\n");
-            signalChecker = 1;
-        }
-        else
-        {
-            if (signalChecker == 0)
-                printf("The elapsed time for Reader is %ld seconds\n\n", (ReaderEnd - ReaderBegin));
-        }
-
-        //read starting time
-        time_t AnalyzerBegin = time(NULL);
-
-        //check for signal from threads
-        if(signalChecker == 0)
-            pthread_cond_wait(&condAnalyzer, &mutexWatchdog);
-
-        //read end time
-        time_t AnalyzerEnd = time(NULL);
+        watchTime = ReaderEnd - ReaderBegin;
 
         //save time or close the program depending on the difference in time
-        if (AnalyzerEnd - AnalyzerBegin >= 2)
+        if (watchTime >= 2)
         {
-            printf("Time waiting for a thread Analyzer exceeded 2 seconds... Exiting program\n");
-            signalChecker = 1;
-        }
-        else
-        {
-            if (signalChecker == 0)
-                printf("The elapsed time for Analyzer is %ld seconds\n\n", (AnalyzerEnd - AnalyzerBegin));
-        }
-
-        //read starting time
-        time_t PrinterBegin = time(NULL);
-
-        //check for signal from threads
-        if(signalChecker == 0)
-            pthread_cond_wait(&condPrinter, &mutexWatchdog);
-
-        //read end time
-        time_t PrinterEnd = time(NULL);
-
-        //save time or close the program depending on the difference in time
-        if (PrinterEnd - PrinterBegin >= 2)
-        {
-            printf("Time waiting for a thread Printer exceeded 2 seconds... Exiting program\n");
-            signalChecker = 1;
-        }
-        else
-        {
-            if (signalChecker == 0)
-                printf("The elapsed time for Printer is %ld seconds\n\n", (PrinterEnd - PrinterBegin));
+            printf("Time waiting for a threads exceeded 2 seconds... Exiting program\n");
+            signalChecker = 2;
         }
     }
+    return 0;
+}
+
+void* runLogger(void *)
+{
+    FILE *fptr;
+
+    fptr = fopen("Log", "w");
+
+    fprintf(fptr, "\nLog start\n");
+
+    fprintf(fptr, "\nNo of CPUs detected: %d, number of statistics detected: %d\n", numberOfCpus, numberOfStatistics);
+
+    while(signalChecker == 0)
+    {
+        pthread_cond_wait(&condWatchdog, &mutexWatchdog);
+
+        fprintf(fptr, "\nReader Stats Old:\n");
+
+        for (int i = 0; i < numberOfCpus; i++)
+        {
+            for (int j = 0; j < numberOfStatistics; j++)
+            {
+                fprintf(fptr, "%d ", cpuCoresAsMatrixOld[i][j]);
+            }
+            fprintf(fptr, "\n");
+        }
+
+        fprintf(fptr, "\nReader Stats:\n");
+
+        for (int i = 0; i < numberOfCpus; i++)
+        {
+            for (int j = 0; j < numberOfStatistics; j++)
+            {
+                fprintf(fptr, "%d ", cpuCoresAsMatrix[i][j]);
+            }
+            fprintf(fptr, "\n");
+        }
+
+        fprintf(fptr, "\nAnalyzer Stats:\n");
+
+        for (int i = 0; i < numberOfCpus; i++)
+        {
+            if (i == 0)
+            {
+                fprintf(fptr, "Total CPU usage: %.02f%%\n", (double)CPU_Percentage[i]);
+            }
+            else
+            {
+                fprintf(fptr, "CPU %d usage:     %.02f%%\n", i, (double)CPU_Percentage[i]);
+            }
+        }
+        fprintf(fptr, "\n");
+
+        fprintf(fptr, "The elapsed time for threads is %d seconds\n\n", (watchTime));
+    }
+
+    if (signalChecker == 2)
+        fprintf(fptr, "Time waiting for a threads exceeded 2 seconds... Exiting program\n");
+
+
+    fclose(fptr);
     return 0;
 }

@@ -12,3 +12,4 @@ test
 calculations.o
 threadFunctions.o
 varInitDestroy.o
+Log
